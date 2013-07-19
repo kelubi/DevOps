@@ -8,7 +8,7 @@
 
 SYNC_USER=""
 SYNC_USER_ID=""
-SYNC_PORT=2
+SYNC_PORT=
 SYNC_AUTH="ssh -p $SYNC_PORT -i $SYNC_USER_ID"
 RSYNC="/usr/bin/rsync"
 
