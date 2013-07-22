@@ -47,6 +47,18 @@ function send_file(){
     fi
 }
 
+function service(){
+    #3 parametes for this function
+    REMOTE_IP=$1
+    S_SHELL=$2
+    S_CMD=$3
+    #commond to run
+    $SYNC_AUTH $SYNC_USER@$REMOTE_IP "sudo bash $S_SHELL $S_CMD" >/dev/null 2>&1
+    if [ $? -eq 0 ];then
+        echo "[Successful] $S_SHELL $S_CMD on $REMOTE_IP"
+    fi
+}
+
 #$1 is function name,running as function $2 $3 ...
 #echo $*
 eval $*
