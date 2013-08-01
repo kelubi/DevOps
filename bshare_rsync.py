@@ -11,15 +11,14 @@ from Queue import Queue
 #REV:1.0
 #Action:rsync file to production environment
 #Update:modify rsync function by damon @20130715
-#Update:modify add thread  by damon @201307122
+#Update:modify add thread by damon @201307122
+#Update:modify parameters name by damon @20130801
 """
 
 Hostlist = {
-
     }
 
 Applist = {
-   
     }
 
 #backup:backup file(running on remote server)
@@ -27,10 +26,10 @@ Applist = {
 #update:move the latest code to working directory(running on remote server)
 #rollcak:move backup file to working directory(running on remote server)
 Modelist = {
-    'send':{'type':'send_file','from':'source','to':'update'},
-    'backup':{'type':'move_file','from':'working','to':'backup'},
-    'update':{'type':'move_file','from':'update','to':'working'},
-    'rollback':{'type':'move_file','from':'backup','to':'working'}
+    'send':{'type':'send_file','from':'source_dir','to':'update_dir'},
+    'backup':{'type':'move_file','from':'working_dir','to':'backup_dir'},
+    'update':{'type':'move_file','from':'update_dir','to':'working_dir'},
+    'rollback':{'type':'move_file','from':'backup_dir','to':'working_dir'}
     }
 
 #function:running cmd
@@ -43,13 +42,13 @@ def rsyncer(n, Cmd_queue):
         Cmd = "bash rsync_api.sh %s %s %s" % ('send_file', Rsync_Source, Ip + ':' + Rsync_Target)
         call(Cmd, shell=True)
     if Modelist[Mode]['type'] == 'move_file':
-        if Mode in Applist[App]['reboot']:
-            Stop = "bash rsync_api.sh %s %s %s %s" % ('service', Ip, Applist[App]['reboot']['file'], 'stop')
+        if Mode in Applist[App]['restart_mode']:
+            Stop = "bash rsync_api.sh %s %s %s %s" % ('service', Ip, Applist[App]['restart_mode']['restart_file'], 'stop')
             call(Stop, shell=True)
         Cmd = "bash rsync_api.sh %s %s %s %s" % ('move_file', Ip, Rsync_Source, Rsync_Target)
         call(Cmd, shell=True)
-        if Mode in Applist[App]['reboot']:
-            Start = "bash rsync_api.sh %s %s %s %s" % ('service', Ip, Applist[App]['reboot']['file'], 'start')
+        if Mode in Applist[App]['restart_mode']:
+            Start = "bash rsync_api.sh %s %s %s %s" % ('service', Ip, Applist[App]['restart_mode']['restart_file'], 'start')
             call(Start, shell=True)
     Cmd_queue.task_done()
     #Rsync_log = ''
