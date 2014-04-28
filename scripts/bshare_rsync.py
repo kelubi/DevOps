@@ -1,4 +1,4 @@
-#!/usr/bin/pyton
+#!/usr/bin/python
 import sys, time, string
 from subprocess import call
 from threading import Thread
